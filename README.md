@@ -108,7 +108,7 @@ To use the provided CI/CD pipeline, configure the GitHub repo variables/secrets 
   - GitHub Actions builds & scans Docker images, pushes to Docker Hub, SSHes into the VM, and runs:
     - `docker compose -f docker-compose.hub.yml pull`
     - `docker compose -f docker-compose.hub.yml up -d`
-  - The app is then reachable at `http://<VM_PUBLIC_IP_OR_DOMAIN>`.
+  - The app is then reachable at `http://3.145.161.42/` (current deployment IP).
 
 _screenshots of running app:_
 
