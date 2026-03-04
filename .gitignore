@@ -1,3 +1,15 @@
+# Terraform
+terraform/.terraform
+terraform/.terraform.lock.hcl
+terraform/.terraform.tfstate
+terraform/.terraform.tfstate.backup
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+terraform/terraform.tfvars
+terraform/terraform.tfvars.backup
+terraform/terraform.tfvars.backup.backup
+terraform/hostelops-key.pub
+terraform/hostelops-key
 # Logs
 logs
 *.log

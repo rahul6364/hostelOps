@@ -173,5 +173,5 @@ jobs:
             # Remote prune: clean up dangling / old images (safe-ish)
             docker image prune -af --filter "until=24h" || true
             # Safe restart of stack
-            docker compose -f docker-compose.hub.yml up -d
+            docker compose -f docker-compose.hub.yml up -d --scale backend=3 --scale frontend=2
             

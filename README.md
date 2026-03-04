@@ -223,3 +223,44 @@ This project uses a **serverful, container-based** model because it provides:
 
 - Full control over long-running connections, MongoDB, and Nginx behavior.
 - Easier Docker-based local development that matches production.
+
+### 8. AWS Infrastructure with Terraform (VPC + EC2)
+
+The repo also includes a small Terraform setup in the `terraform/` directory to provision the VM and networking used by the Docker stack:
+
+- **`vpc.tf`**: creates a `hostelops-vpc` using the official `terraform-aws-modules/vpc/aws` module with public + private subnets.
+- **`ec2.tf`**:
+  - Defines an `aws_key_pair` (`hostelops-key`) from `hostelops-key.pub`.
+  - Defines a security group (`hostelops-sg`) that allows inbound **SSH (22)** and **HTTP (80)** from `0.0.0.0/0` and all outbound traffic.
+  - Creates an `aws_instance.hostelops_instance` in a public subnet with:
+    - Configurable `instance_type`, `ami`, and root volume size via variables in `variable.tf`.
+    - `user_data` from `hostelops.sh` that installs Nginx, Git, Docker, and Docker Compose on first boot.
+- **`provider.tf` / `terraform.tf`**: lock provider versions and configure AWS region (`us-east-2`).
+- **`output.tf`**: exposes the EC2 instance public IP as `hostelops_instance_public_ip`.
+
+#### Provisioning steps (Terraform)
+
+From the `terraform/` directory:
+
+1. Ensure your AWS credentials are set (e.g., via `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` or an AWS profile).
+2. Initialize Terraform:
+
+   ```bash
+   terraform init
+   ```
+
+3. Review the plan and apply:
+
+   ```bash
+   terraform plan
+   terraform apply
+   ```
+
+4. After `apply` completes, note the `hostelops_instance_public_ip` output; this is the VM that will run your Docker stack.
+5. SSH to the instance using the private key that matches `hostelops-key.pub`, and clone this repo into the path you want to use for `VM_APP_PATH` in the GitHub Actions workflow.
+
+Once the EC2 instance and VPC are provisioned, the existing **GitHub Actions CI/CD pipeline** can use that VM (via `VM_HOST`, `VM_USER`, `VM_SSH_KEY`, `VM_APP_PATH` variables/secrets) to run `docker compose -f docker-compose.hub.yml` and deploy the containerized app. This ties together:
+
+- Infrastructure provisioning with **Terraform**.
+- Application build, scan, and image publishing with **GitHub Actions**.
+- Runtime orchestration and horizontal scaling with **Docker Compose** and **Nginx** on the EC2 VM.
