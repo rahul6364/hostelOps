@@ -30,6 +30,7 @@ services:
 
   frontend:
     image: ${DOCKERHUB_USERNAME}/hostelops-frontend:latest
+    container_name: hostelops-frontend
     environment:
       # Relative API URL now handled heavily by nginx routing /api to backend
       - VITE_API_URL=/api
