@@ -30,11 +30,11 @@ services:
 
   frontend:
     image: ${DOCKERHUB_USERNAME}/hostelops-frontend:latest
-    container_name: hostelops-frontend
     environment:
       # Relative API URL now handled heavily by nginx routing /api to backend
       - VITE_API_URL=/api
-    command: ["serve", "-s", "dist", "-l", "5173", "-H", "0.0.0.0"]
+    # Bind to all interfaces so nginx (another container) can reach it
+    command: ["serve", "-s", "dist", "-l", "tcp://0.0.0.0:5173"]
     depends_on:
       - backend
     restart: unless-stopped
