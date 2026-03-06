@@ -10,6 +10,7 @@ terraform/terraform.tfvars.backup
 terraform/terraform.tfvars.backup.backup
 terraform/hostelops-key.pub
 terraform/hostelops-key
+terraform/hostelops-key.pem
 # Logs
 logs
 *.log
